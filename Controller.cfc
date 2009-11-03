@@ -21,10 +21,10 @@
 				if(Not ListLen(eventName, ".") EQ 2){
 					throw("Event name needs to be in the format <controller>.<action>");
 				}
-				REQUEST.event.set(instance.settings.eventValue,arguments.event);
 				var Controller = instance.controllerService.getController(ListGetAt(eventName,1,"."));
+				REQUEST.event.set(instance.settings.eventValue,arguments.eventName);
 				
-				Evaluate("Controller.#ListGetAt(eventName,2,".")#(event)");				
+				Evaluate("Controller.#ListGetAt(eventName,2,".")#(REQUEST.event)");				
 				return;
 		}
 			
@@ -34,4 +34,10 @@
 		<cfargument name="message">
 		<cfthrow message="#arguments.message#">
 	</cffunction>
+	
+	<cffunction name="redirect">
+		<cfargument name="url">
+		<cflocation url="index.cfm?#instance.settings.eventValue#=#arguments.url#" addtoken="false">
+	</cffunction>
+
 </cfcomponent>

@@ -20,8 +20,7 @@
 					return instance.controllers[controllerName];
 				}
 				catch(any excpt){
-					dump(excpt);
-					abort;
+					REQUEST.event.addError("system", "controller '#instance.settings.controllerPath#.#controllerName#' not found");
 				}			
 		
 			return "";		

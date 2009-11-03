@@ -50,11 +50,13 @@
 
 			var l = {};
 			//Implement some security
-			if(ListFindNoCase(instance.security.securelist,Event.getControllerName())){
-				redirect("#CGI.script_name#?#variables.settings.eventValue#=#variables.security.redirect#");
+			
+			
+			if(ListFindNoCase(instance.security.securelist,Event.getControllerName()) AND NOT isUserLoggedIn()){
+				redirect("#CGI.script_name#?#instance.settings.eventValue#=#variables.security.redirect#");
 			
 			}
-			
+			REQUEST.Event = Event;
 			var Controller = application.controllerService.getController(Event.getControllerName());
 			//Now call the method that we want
 			if(isObject(Controller)){
@@ -68,7 +70,7 @@
 			
 			
 
-			REQUEST.Event = Event;
+			
 			//Now lets see what we are requesting
 			return true;
 		}
