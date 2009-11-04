@@ -28,6 +28,12 @@
 				return;
 		}
 			
+		function getRecord(objectName){
+			return instance.reactor.createRecord(objectName);
+		}
+		function getGateway(objectName){
+			return instance.reactor.createGateway(objectName);
+		}
 	
 	</cfscript>
 	<cffunction name="throw" output="false">
