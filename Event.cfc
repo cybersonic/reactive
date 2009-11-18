@@ -119,7 +119,38 @@
 			function setControllerService(ControllerService){
 				instance.ControllerService = arguments.ControllerService;
 			}
+			function setRenderer(Renderer){
+				instance.Renderer = arguments.Renderer;
+			}
+		
+			function render(renderType, opts={}){
+				return instance.renderer.render(renderType,this,opts);
+			}
+			
+			function onMissingMethod(missingMethodName,missingMethodArguments){
+				
+				var funcStart = Left(missingMethodName,3);
+				var funcName = Right(missingMethodName,Len(missingMethodName) - 3);
+				if( funcStart EQ "set"){
+					set(funcName, arguments.missingMethodArguments[1]);
+					return this;
+				}
+				else if(funcStart EQ "get"){
+					return get(funcName);
+				}
+				else if(left(missingMethodName,Len("render")) EQ "render"){
+					if(NOT isStruct(arguments.missingMethodArguments[1])){
+						throw("A structure is expected as the optional variables");
+					}
+					return render(Right(missingMethodName,Len(missingMethodName) - Len("render")),arguments.missingMethodArguments[1]);
+				}
+				
+				//Otherwise we don't know what this function is
+				Evaluate("super.#missingMethodName#()");
+				
+			}
 		</cfscript>
+	
 		
 		<cffunction name="renderView">
 			<cfset var event = this>

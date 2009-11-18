@@ -20,26 +20,32 @@
 		 		controllerLocation	= "/controllers/",
 		 		controllerPath		= "controllers",
 		 		reload				= "true"
+		
 		 };
 		 
+		 instance.reactor = {};
+		
 		 instance.security = {
 		 		securelist			= "app",
 		 		redirect			= "home.welcome",
 		 		whitelist			= "home,login,register"
-		 	
-		 
 		 }
 		 
 	
 		 
 		 function onApplicationStart(){
 		 	 application.controllerService 	= CreateObject("component", "reactive.ControllerService").init(instance.settings);
+
+			//need to create this using a reactorConfig
  		 	 application.reactor 			= CreateObject("Component", "reactor.reactorFactory").init(expandPath("config/reactor.xml.cfm"));
-			 return true;
+
+
+			 application.Renderer			= CreateObject("Component", "reactive.Renderer").init(instance.settings);
+			return true;
 		 }
 	
 		function onRequestStart(thePage){
-			if(isDefined("url.init")){
+			if(isDefined("url.init") OR instance.settings.reload){
 				onApplicationStart();
 			}
 			
@@ -47,13 +53,13 @@
 			
 			var Event = CreateObject("component", "Event").init(instance.settings); 
 				Event.setControllerService(application.controllerService);
-
+				Event.setRenderer(application.Renderer);
 			var l = {};
 			//Implement some security
 			
 			
 			if(ListFindNoCase(instance.security.securelist,Event.getControllerName()) AND NOT isUserLoggedIn()){
-				redirect("#CGI.script_name#?#instance.settings.eventValue#=#variables.security.redirect#");
+				redirect("#CGI.script_name#?#instance.settings.eventValue#=#instance.security.redirect#");
 			
 			}
 			REQUEST.Event = Event;

@@ -3,6 +3,7 @@
 	<cfscript>
 		instance.controllers = {};
 		instance.settings = {};
+		instance.services = {}; //Services we want to inject into controllers
 	
 		function init(settings){
 			instance.settings = arguments.settings;
