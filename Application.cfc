@@ -34,30 +34,35 @@
 	
 		 
 		 function onApplicationStart(){
+		 	var l = {};
 		 	 application.controllerService 	= CreateObject("component", "reactive.ControllerService").init(instance.settings);
 
+
+			l.reactorConfig = CreateObject("component", "reactor.config.config").init(instance.reactor.configPath);
+			l.reactorConfig.setDSN(instance.reactor.dsn);
+			l.reactorConfig.setMapping(instance.reactor.mapping);
+			l.reactorConfig.setMode(instance.reactor.mode);
+			l.reactorConfig.setProject(instance.reactor.project);
+			l.reactorConfig.setType(instance.reactor.type);
 			//need to create this using a reactorConfig
- 		 	 application.reactor 			= CreateObject("Component", "reactor.reactorFactory").init(expandPath("config/reactor.xml.cfm"));
-
-
+			 application.reactorConfig 		= l.reactorConfig;
+ 		 	 application.reactor 			= CreateObject("Component", "reactor.reactorFactory").init(l.reactorConfig);
 			 application.Renderer			= CreateObject("Component", "reactive.Renderer").init(instance.settings);
 			return true;
 		 }
 	
 		function onRequestStart(thePage){
+			var l = {};
 			if(isDefined("url.init") OR instance.settings.reload){
 				onApplicationStart();
 			}
 			
-		
-			
 			var Event = CreateObject("component", "Event").init(instance.settings); 
 				Event.setControllerService(application.controllerService);
 				Event.setRenderer(application.Renderer);
-			var l = {};
+			
+			
 			//Implement some security
-			
-			
 			if(ListFindNoCase(instance.security.securelist,Event.getControllerName()) AND NOT isUserLoggedIn()){
 				redirect("#CGI.script_name#?#instance.settings.eventValue#=#instance.security.redirect#");
 			

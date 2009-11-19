@@ -4,6 +4,8 @@
 			instance.settings	= {};
 			instance.controller = {};
 			instance.errors 	= {};
+			instance.view		= "";
+			instance.layout		= "";
 						
 			function init(settings){
 				instance.settings = arguments.settings;
@@ -12,6 +14,9 @@
 					var scopeStruct = Evaluate(scope);
 					StructAppend(instance.values,scopeStruct,true);	
 				}
+				
+				//Setup the Layout and view if required
+				instance.view = instance.settings.viewpath & getControllerName() & "/" & getControllerAction() & ".cfm";
 				return this;
 			}
 			
@@ -32,13 +37,13 @@
 				instance.values[keyName] = keyValue;
 			}
 		
-			//getthe view
+			//get the view
 			function getView(){
-				return instance.settings.viewpath & getControllerName() & "/" & getControllerAction() & ".cfm";
+				return instance.view;
 			}
 			
 			function setView(view){
-				instance.controller.action = arguments.view;
+				instance.view = arguments.view;
 			}
 		
 			function getLayout(){
